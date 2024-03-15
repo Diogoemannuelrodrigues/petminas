@@ -21,7 +21,7 @@ public class Pessoa {
 
     private String cpf;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "pessoa")
     private List<Pet> pets;
 
     @ElementCollection

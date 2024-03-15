@@ -1,1 +1,20 @@
-spring.application.name=petminas
+server:
+  port: 8080
+
+spring:
+  application:
+    name: petminas
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: true
+  #Datasource
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/petminas
+    username: postgres
+    password: 123456
