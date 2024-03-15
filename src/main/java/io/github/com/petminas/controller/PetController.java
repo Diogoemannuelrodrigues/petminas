@@ -27,8 +27,14 @@ public class PetController {
     }
 
     @GetMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Pet> get(@PathVariable Integer id) {
+    public ResponseEntity<Pet> getPet(@PathVariable Integer id) {
          return ResponseEntity.status(HttpStatus.OK).body(this.petService.getPet(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Pet> editarPet(@PathVariable Integer id,
+                                         @RequestBody Pet petAtualizado) {
+        Pet petEditado = petService.editarPet(id, petAtualizado);
+        return ResponseEntity.ok(petEditado);
     }
 }
