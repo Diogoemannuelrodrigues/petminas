@@ -1,7 +1,7 @@
 package io.github.com.petminas.entidade;
 
 import io.github.com.petminas.entidade.enums.GeneroEnum;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "pet")
 public class Pet {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String nome;
@@ -21,9 +25,10 @@ public class Pet {
 
     private Integer idade;
 
+    @Enumerated(EnumType.STRING)
     private GeneroEnum generoEnum;
 
     @ManyToOne
-    private Pessoa dono;
+    private Pessoa pessoa;
 
 }
