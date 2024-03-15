@@ -4,14 +4,12 @@ import io.github.com.petminas.entidade.Pet;
 import io.github.com.petminas.entidade.records.PetRecord;
 import io.github.com.petminas.service.PetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/pet")
+@RequestMapping("/api/v1/pet")
 @RequiredArgsConstructor
 public class PetController {
 
@@ -19,6 +17,18 @@ public class PetController {
 
     @PostMapping
     public ResponseEntity<Pet> salvarPet(@RequestBody PetRecord petRecord){
-        return ResponseEntity.ok().body(petService.salvarPet(petRecord));
+        return ResponseEntity.status(HttpStatus.CREATED).body(petService.salvarPet(petRecord));
+    }
+
+    @DeleteMapping(path = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void apagar(@PathVariable Integer id) {
+        this.petService.deletarPet(id);
+    }
+
+    @GetMapping(path = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Pet> get(@PathVariable Integer id) {
+         return ResponseEntity.status(HttpStatus.OK).body(this.petService.getPet(id));
     }
 }
