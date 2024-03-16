@@ -31,10 +31,9 @@ public class PetController {
          return ResponseEntity.status(HttpStatus.OK).body(this.petService.getPet(id));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Pet> editarPet(@PathVariable Integer id,
                                          @RequestBody Pet petAtualizado) {
-        Pet petEditado = petService.editarPet(id, petAtualizado);
-        return ResponseEntity.ok(petEditado);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(petService.editarPet(id, petAtualizado));
     }
 }
