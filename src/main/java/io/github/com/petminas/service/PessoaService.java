@@ -7,6 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -15,33 +19,30 @@ public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-    public Pessoa salvarPessoa(PessoaRecord pessoaRecord) {
+    public Pessoa salvarCliente(PessoaRecord pessoaRecord) {
         Pessoa pessoaResult = pessoaRepository.findByNome(pessoaRecord.nome());
         if (pessoaResult != null) {
-            throw new IllegalArgumentException("Pessoa '" + pessoaRecord.nome() + "' já cadastrada.");
+            throw new IllegalArgumentException("Cliente '" + pessoaRecord.nome() + "' já cadastrada.");
         }
         Pessoa pessoa = new Pessoa();
-        BeanUtils.copyProperties(pessoa, pessoaRecord);
+        BeanUtils.copyProperties(pessoaRecord, pessoa);
         return pessoaRepository.save(pessoa);
     }
 
-    public void deletarPessoa(PessoaRecord pessoaRecord){
-        var result = pessoaRepository.findByNome(pessoaRecord.nome());
-        if (result == null){
-            throw new IllegalArgumentException("Nao existe pessoa - "+pessoaRecord.nome()+" com esse nome.");
-        }
+    public void deletarCliente(Integer id){
+        var result = pessoaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Nao existe para esse id"));
         pessoaRepository.delete(result);
     }
 
-    public Pessoa editarPessoa(PessoaRecord pessoaRecord){
-        Pessoa pessoa = new Pessoa();
-        var resultPessoa = pessoaRepository.findById(pessoaRecord.id())
-                .orElseThrow(() -> new IllegalArgumentException("Pessoa nao encontrada"));
-        BeanUtils.copyProperties(pessoa, pessoaRecord);
-        return this.pessoaRepository.save(pessoa);
+    public Pessoa editarCliente(Integer id, PessoaRecord pessoaAtualizada) {
+        Pessoa pessoaExistente = pessoaRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Cliente não encontrado com o ID: " + id));
+        BeanUtils.copyProperties(pessoaAtualizada, pessoaExistente, "id");
+        return pessoaRepository.save(pessoaExistente);
     }
-
-    public Pessoa getPessoa(String name){
-        return pessoaRepository.findByNome(name);
+    @Transactional(readOnly = true)
+    public Optional<Pessoa> getCliente(Integer id){
+        return pessoaRepository.findById(id);
     }
 }
